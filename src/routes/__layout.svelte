@@ -64,11 +64,11 @@
         }
     }
 
-    a {
+    footer a {
         background-image: none;
     }
 
-    a:hover {
+    footer a:hover {
         text-decoration: underline;
     }
 </style>
