@@ -6,7 +6,7 @@
     export let data;
 
     let streetStyle = {
-        "color": "#d95f0e",
+        "color": "#F6CE3B",
         "weight": 10,
         "opacity": 0.9
     };

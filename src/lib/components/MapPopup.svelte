@@ -48,7 +48,7 @@
 
 <style>
     .popup {
-        background-color: #d95f0e;
+        background-color: #F6CE3B;
     }
 
     .popup a {
