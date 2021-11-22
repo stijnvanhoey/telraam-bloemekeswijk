@@ -31,7 +31,10 @@
         <Popover label="Vree wijze wijk!" background="warning">
             <Badge type="success">Bloemekeswijk</Badge>
        </Popover>
-        met steun van...
+        met data van
+        <Popover label="CC-BY-NC license" background="warning">
+            <a href="https://telraam.net/">TelRaam</a>.
+       </Popover>
     </p>
 </footer>
 
@@ -59,5 +62,13 @@
         footer {
             padding: 40px 0;
         }
+    }
+
+    a {
+        background-image: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
     }
 </style>

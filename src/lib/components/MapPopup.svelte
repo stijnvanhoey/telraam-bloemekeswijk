@@ -54,5 +54,12 @@
     .popup a {
         color: #383838;
         text-decoration: none;
+        background-image: none;
+    }
+
+    .popup a:hover {
+        color: #383838;
+        text-decoration: underline;
+        background-image: none;
     }
 </style>
