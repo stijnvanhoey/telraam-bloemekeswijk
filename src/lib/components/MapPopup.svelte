@@ -52,7 +52,7 @@
     }
 
     .popup a {
-        color: lightgray;
+        color: #383838;
         text-decoration: none;
     }
 </style>
