@@ -1,4 +1,4 @@
-import node from '@sveltejs/adapter-node';
+import vercel from '@sveltejs/adapter-vercel';
 import fs from "fs";
 
 const pkg = JSON.parse(fs.readFileSync(new URL('package.json', import.meta.url), 'utf8'));
@@ -9,7 +9,7 @@ const config = {
 	kit: {
 		// hydrate the <div id="svelte"> element in src/app.html
 		target: '#svelte',
-		adapter: node(),
+		adapter: vercel(),
 		ssr: false,
 		vite: {
 			optimizeDeps: {
