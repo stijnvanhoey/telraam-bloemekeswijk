@@ -78,7 +78,7 @@
         if(browser) {
             const leaflet = await import('leaflet');
 
-            const map = leaflet.map('map').setView([51.069,3.703], 16);
+            const map = leaflet.map('map', {minZoom: 13}).setView([51.069,3.703], 16);
 
             leaflet.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
                 attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
