@@ -23,3 +23,8 @@ html, body {
 .leaflet-container a.leaflet-popup-close-button:hover {
     color: #272625 !important ;
 }
+
+.postcard img {
+    max-height: 250px;
+    object-fit: cover;
+}
