@@ -33,8 +33,7 @@ import { onMount } from 'svelte';
 import Map from '$lib/components/Map.svelte';
 
 export let snapshot = [];
-let speedData = [];
-
+//let speedData = [];
 // onMount(
 //     Promise.all(
 //         snapshot.features.map(segment => {
@@ -51,8 +50,7 @@ let speedData = [];
 //         console.log(error);
 //     })
 // );
-
-$: segments = snapshot.features.map(x => x.properties.segment_id)
+//$: segments = snapshot.features.map(x => x.properties.segment_id)
 
 </script>
 
