@@ -4,6 +4,10 @@ html, body {
 	height: 100%;
 }
 
+a {
+    background-image: none;
+}
+
 .map img {
     transform: none;
     border: none;
