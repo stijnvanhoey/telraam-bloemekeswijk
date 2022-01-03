@@ -11,8 +11,8 @@
         posts.push(p);
     }
 
-    export function load({ params }) {
-        const { slug } = params;
+    export function load({ page }) {
+        const { slug } = page.params;
 
         // Find the post with the slug
         const filteredPost = posts.find((p) => {
