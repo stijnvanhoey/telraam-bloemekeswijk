@@ -1,6 +1,6 @@
-# Telraam bloemekeswijk
+# Telraam bloemekenswijk
 
-Experiment with svelte, leaflet and papercss to create a telraam frontend for 'Bloemekeswijk'.
+Experiment with svelte, leaflet and papercss to create a telraam frontend for 'bloemekenswijk'.
 
 ## Developing
 

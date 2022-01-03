@@ -6,22 +6,24 @@
 </script>
 
 <svelte:head>
-    <title>Telraam Bloemekeswijk | Home Page</title>
+    <title>Telraam bloemekenswijk | Home Page</title>
     <html lang="en-GB" />
 </svelte:head>
 
 <main>
     <Navbar border={false}>
         <h3 slot="brand">
-          <a href="/">TelRaam Bloemekeswijk</a>
+          <a href="/">De Bloemekenwijk telt mee </a>
         </h3>
         <ul class="inline">
-          <li><a href="/about">About</a></li>
-          <li><a href="https://telraam.net/">Telraam</a></li>
+          <li><a href="/" alt="Overzichtskaart">Kaart</a></li>
+          <li><a href="/blog" alt="Artikels over telraam project">Blog</a></li>
+          <li><a href="/over" alt="Beschrijving telraam bloemekenswijk">Over</a></li>
+          <li><a href="/team" alt="Teamleden telraam bloemekenswijk">Team</a></li>
         </ul>
     </Navbar>
 
-    <div class="container-lg paper border border-primary">
+    <div class="container-lg">
         <slot />
     </div>
 </main>
@@ -29,7 +31,7 @@
 <footer>
     <p>In elkaar gebokst door de bewoners van de
         <Popover label="Vree wijze wijk!" background="warning">
-            <Badge type="success">Bloemekeswijk</Badge>
+            <Badge type="success">bloemekenswijk</Badge>
        </Popover>
         met data van
         <Popover label="CC-BY-NC license" background="warning">
