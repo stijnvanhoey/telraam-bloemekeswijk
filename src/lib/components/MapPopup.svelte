@@ -9,7 +9,8 @@
     const segmentNames = {
         9000002436 : "Dahliastraat",
         9000000795 : "Pannestraat",
-        529611: "Gasmeterlaan"
+        529611: "Gasmeterlaan",
+        9000003002: "Mimosastraat"
     };
 
     let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};

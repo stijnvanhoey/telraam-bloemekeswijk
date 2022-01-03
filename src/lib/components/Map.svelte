@@ -3,7 +3,7 @@
     import { browser } from '$app/env';
     import MapPopup from './MapPopup.svelte';
 
-    export let data;
+    export let snapshot;
 
     let streetStyle = {
         "color": "#F6CE3B",
@@ -103,7 +103,7 @@
             //     ext: 'jpg'
             // }).addTo(map);
 
-            leaflet.geoJSON(data, {
+            leaflet.geoJSON(snapshot, {
                     onEachFeature: onEachFeature,
                     style: streetStyle
                 })
@@ -115,7 +115,7 @@
 
 
 <main>
-    <div id="map" class="map"></div>
+    <div id="map" class="map paper border border-primary"></div>
 </main>
 
 <style>
