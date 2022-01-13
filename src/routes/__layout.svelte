@@ -13,7 +13,7 @@
 <main>
     <Navbar border={false}>
         <h3 slot="brand">
-          <a href="/">De Bloemekenwijk telt mee </a>
+          <a href="/">De Bloemekenswijk telt mee </a>
         </h3>
         <ul class="inline">
           <li><a href="/" alt="Overzichtskaart">Kaart</a></li>
