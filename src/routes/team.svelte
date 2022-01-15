@@ -11,6 +11,7 @@
         in de straat.</p>
     <p>En om de boodschap helder en eenvoudig te communiceren hebben we ook onze <Badge type="primary">verTELLERS</Badge>. Team communicatie dus. Die zorgen voor beeld
         en verhaal.</p>
+    <p>Zin om mee te doen? Stuur een mailtje naar Davy via <a href="mailto:telraam@bloemekenswijk.gent">telraam@bloemekenswijk.gent</a> en we nemen je graag mee in de loop! Hopelijk tot snel.
     <!-- <div class="img-box">
         <img src="https://unsplash.it/450" alt="dummy">
     </div> -->
