@@ -1,6 +1,6 @@
 import vercel from '@sveltejs/adapter-vercel';
 import { mdsvex } from 'mdsvex';
-import fs from "fs";
+import fs from 'fs';
 
 const pkg = JSON.parse(fs.readFileSync(new URL('package.json', import.meta.url), 'utf8'));
 
@@ -8,13 +8,11 @@ const pkg = JSON.parse(fs.readFileSync(new URL('package.json', import.meta.url),
 
 const config = {
 	preprocess: [
-		mdsvex(
-			{
-				extensions: ['.md']
-			}
-		)
+		mdsvex({
+			extensions: ['.md']
+		})
 	],
-	extensions: [".svelte", ".md"],
+	extensions: ['.svelte', '.md'],
 	kit: {
 		// hydrate the <div id="svelte"> element in src/app.html
 		target: '#svelte',
@@ -23,7 +21,7 @@ const config = {
 		vite: {
 			optimizeDeps: {
 				include: ['lodash.omit', 'lodash.pick']
-				}
+			}
 		}
 	}
 };

@@ -4,7 +4,7 @@
 		return {
 			props: {
 				title: `Error ${status}`,
-                message: `${error.message}`
+				message: `${error.message}`
 			}
 		};
 	}
@@ -12,9 +12,9 @@
 
 <script>
 	export let title;
-    export let message;
+	export let message;
 </script>
 
 <h1>{title}</h1>
 
-<p> {message}</p>
+<p>{message}</p>

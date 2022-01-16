@@ -4,14 +4,13 @@ title: Infomeeting bloemekenswijk telt mee
 date: 2021-12-28
 author: davy
 banner: telraam_box.jpg
-excerpt: "Op donderdagavond 16 december organiseerden we een eerste (digitale) infovergadering over het project."
-tags: ["communicatie"]
+excerpt: 'Op donderdagavond 16 december organiseerden we een eerste (digitale) infovergadering over het project.'
+tags: ['communicatie']
 ---
 
 <script>
   import Image from "$lib/components/Image.svelte";
 </script>
-
 
 <Image
   filename="telraam_parts.jpg"
