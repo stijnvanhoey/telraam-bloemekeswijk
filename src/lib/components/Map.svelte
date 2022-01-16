@@ -121,7 +121,7 @@
 </script>
 
 <main>
-	<div id="map" class="map paper border border-primary" />
+	<div id="map" class="map border border-primary z-0" />
 </main>
 
 <style>

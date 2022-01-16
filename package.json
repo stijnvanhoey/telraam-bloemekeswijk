@@ -27,6 +27,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@popperjs/core": "^2.11.2",
 		"leaflet": "^1.7.1",
 		"lru-cache": "^6.0.0"
 	}
