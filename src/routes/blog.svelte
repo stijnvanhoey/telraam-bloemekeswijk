@@ -21,17 +21,13 @@
 </script>
 
 <script>
-    import PostCard from '$lib/components/PostCard.svelte';
+	import PostCard from '$lib/components/PostCard.svelte';
 
 	export let posts;
 </script>
 
 <div class="row flex-spaces">
-    {#each posts as post}
-        <div class="sm-6 col"><PostCard {post} /></div>
-    {/each}
-  </div>
-
-
-
-
+	{#each posts as post}
+		<div class="sm-6 col"><PostCard {post} /></div>
+	{/each}
+</div>
