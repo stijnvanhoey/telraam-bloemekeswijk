@@ -5,10 +5,10 @@ const posts = [];
 for (const path in imports) {
 	const post = imports[path];
 	if (post) {
-    // For each of them, MDsveX will do the heavy lifting. The "metadata"
-    // is automatically recovered from the Frontmatter, and we're also
-    // asking it to render the blog post so we're able to use it
-    // as a component later on.
+		// For each of them, MDsveX will do the heavy lifting. The "metadata"
+		// is automatically recovered from the Frontmatter, and we're also
+		// asking it to render the blog post so we're able to use it
+		// as a component later on.
 		posts.push({
 			...post.metadata,
 			...post.default.render()
@@ -25,7 +25,7 @@ const filteredPosts = posts
 			: new Date(a.date).getTime() < new Date(b.date).getTime()
 			? 1
 			: 0
-	)
+	);
 
 // Expose this info to other files
 export default filteredPosts;
