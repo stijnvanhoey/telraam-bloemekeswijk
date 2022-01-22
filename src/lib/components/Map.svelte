@@ -1,4 +1,5 @@
 <script>
+	import {SegmentStateEnum} from '../../types';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/env';
 	import MapPopup from './MapPopup.svelte';
@@ -75,6 +76,20 @@
 		}
 	}
 
+	function styleFeature(feature) {
+		switch (feature.properties.state) {
+			case SegmentStateEnum.ACTIVE:
+				return streetStyle;
+			case SegmentStateEnum.NEW:
+				return { ...streetStyle, color: '#7FFFD4' };
+			case SegmentStateEnum.INACTIVE:
+				return { ...streetStyle, color: '#696969' };
+			default:
+				// unknown
+				return { ...streetStyle, color: '#ffffff' };
+		}
+	}
+
 	onMount(async () => {
 		if (browser) {
 			const leaflet = await import('leaflet');
@@ -113,7 +128,7 @@
 			leaflet
 				.geoJSON(snapshot, {
 					onEachFeature: onEachFeature,
-					style: streetStyle
+					style: styleFeature
 				})
 				.addTo(map);
 		}
