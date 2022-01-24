@@ -14,7 +14,7 @@
 		<Card title={post.title} image="/img/{post.banner}" subTitle="{currentDate} door {post.author}">
 			{post.excerpt}
 			<p slot="bottom">
-				<Button><a href={post.slug}>Lees verder...</a></Button>
+				<Button isLink="true" href={post.slug}>Lees verder...</Button>
 			</p>
 		</Card>
 	</div>
