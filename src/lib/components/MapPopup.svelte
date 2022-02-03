@@ -106,15 +106,15 @@
 
 <style>
 	.popup {
-		background-color: #f6ce3b;
+		background-color: #3cb371;
 	}
 
 	.popup-inactive {
-		background-color: #696969;
+		background-color: #ff0000;
 	}
 
 	.popup-new {
-		background-color: #7FFFD4;
+		background-color: #ffa500;
 	}
 
 	.popup a {

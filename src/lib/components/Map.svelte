@@ -7,7 +7,7 @@
 	export let snapshot;
 
 	let streetStyle = {
-		color: '#F6CE3B',
+		color: '#3cb371',
 		weight: 10,
 		opacity: 0.9
 	};
@@ -81,12 +81,12 @@
 			case SegmentStateEnum.ACTIVE:
 				return streetStyle;
 			case SegmentStateEnum.NEW:
-				return { ...streetStyle, color: '#7FFFD4' };
+				return { ...streetStyle, color: '#ffa500' };
 			case SegmentStateEnum.INACTIVE:
-				return { ...streetStyle, color: '#696969' };
+				return { ...streetStyle, color: '#ff0000' };
 			default:
 				// unknown
-				return { ...streetStyle, color: '#ffffff' };
+				return { ...streetStyle, color: '#3cb371' };
 		}
 	}
 
