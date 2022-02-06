@@ -6,9 +6,9 @@ const limiter = rateLimit({
 });
 
 export async function get(request) {
-	const limit = parseInt(import.meta.env.VITE_API_LIMIT, 20); // number of requests per minute
+	const limit = parseInt(import.meta.env.VITE_API_LIMIT, 200); // number of requests per minute
 	const currentUsage = await limiter.check(request, limit, 'CACHE_TOKEN');
-	const isRateLimited = currentUsage >= parseInt(limit, 10);
+	const isRateLimited = currentUsage >= parseInt(limit, 100);
 
 	if (isRateLimited) {
 		console.log('Rate limit exceeded...');
@@ -22,7 +22,7 @@ export async function get(request) {
 		const token = import.meta.env.VITE_TELRAAM_API_KEY;
 		const url = 'https://telraam-api.net/v1/reports/traffic';
 		// Note -> did not work with json.stringify, so defined as raw body
-		let raw = `{\r\n \"level\":\"segments\",\r\n \"format\":\"per-hour\",\r\n \"id\":\"${request.params.segmentid}\",\r\n \"time_start\":\"2021-12-01 12:00:00Z\",\r\n \"time_end\":\"2021-12-02 12:00:00Z\"}\r\n`;
+		let raw = `{\r\n \"level\":\"segments\",\r\n \"format\":\"per-hour\",\r\n \"id\":\"${request.params.segmentid}\",\r\n \"time_start\":\"${request.params.timeStart}\",\r\n \"time_end\":\"${request.params.timeEnd}\"}\r\n`;
 
 		const res = await fetch(url, {
 			method: 'POST',

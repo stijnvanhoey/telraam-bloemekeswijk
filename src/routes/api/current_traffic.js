@@ -34,7 +34,7 @@ export async function get(request) {
 			redirect: 'follow'
 		});
 		if (res.ok) {
-			console.log('Most recent traffic request from Telraam succesfull.');
+			console.log('Most recent traffic request from Telraam successful.');
 			return {
 				statusCode: 200,
 				headers: {

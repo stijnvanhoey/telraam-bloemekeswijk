@@ -23,6 +23,7 @@
 	<h5 class="child-borders">
 		{properties.state}<br/>
 		{#if isDefault}
+		Snelheidslimiet: {properties.speed_limit} km/h<br/>
 		Hier zijn op {currentDate}<br /> tussen {previousHour} en {currentHour} uur<br />
 		<Badge type="primary">
 			{Math.round(properties.pedestrian)}
