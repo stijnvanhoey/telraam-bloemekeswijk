@@ -1,27 +1,29 @@
 <script>
 	import { Badge } from 'spaper';
+	import {SegmentStateEnum} from '../../types';
 
 	export let properties;
 	let currentDateString = properties.date;
 
-	// TODO - add API call to get location metadat instead of hardcoding
-	const segmentNames = {
-		9000002436: 'Dahliastraat',
-		9000000795: 'Pannestraat',
-		529611: 'Gasmeterlaan',
-		9000003002: 'Mimosastraat'
-	};
-
 	let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-	$: currentDate = new Date(Date.parse(currentDateString)).toLocaleString('nl-BE', options);
-	$: currentHour = new Date(Date.parse(currentDateString)).getHours();
+	const currentDateStr = new Date(Date.parse(currentDateString)).toLocaleString('nl-BE', options);
+	const currentHourNum = new Date(Date.parse(currentDateString)).getHours();
+	const previousHourNum = currentHourNum - 1;
+	const isInactive = properties.state === SegmentStateEnum.INACTIVE;
+	const isNew = properties.state === SegmentStateEnum.NEW;
+	const isDefault = !isInactive && !isNew;
+	$: currentDate = currentDateStr === 'Invalid Date' ? '-' : currentDateStr;
+	$: previousHour = isNaN(previousHourNum) ? '-' : previousHourNum;
+	$: currentHour = isNaN(currentHourNum) ? '-' : currentHourNum;
 </script>
 
-<div class="popup border padding-left-small padding-right-small shadow shadow-small">
-	<h4>{segmentNames[properties.segment_id]}</h4>
+<div class="border padding-left-small padding-right-small shadow shadow-small" class:popup-inactive={isInactive} class:popup-new={isNew} class:popup={isDefault}>
+	<h4>{properties.name}</h4>
 
 	<h5 class="child-borders">
-		Hier zijn op {currentDate}<br /> tussen {currentHour - 1} en {currentHour} uur<br />
+		{properties.state}<br/>
+		{#if isDefault}
+		Hier zijn op {currentDate}<br /> tussen {previousHour} en {currentHour} uur<br />
 		<Badge type="primary">
 			{Math.round(properties.pedestrian)}
 			<svg
@@ -97,13 +99,22 @@
 			>
 		</Badge>
 		gepasseerd.
+		{/if}
 	</h5>
 	<a href="https://telraam.net/nl/location/{properties.segment_id}">Toon me meer data...</a>
 </div>
 
 <style>
 	.popup {
-		background-color: #f6ce3b;
+		background-color: #3cb371;
+	}
+
+	.popup-inactive {
+		background-color: #ff0000;
+	}
+
+	.popup-new {
+		background-color: #ffa500;
 	}
 
 	.popup a {

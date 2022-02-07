@@ -1,8 +1,36 @@
 <script context="module">
+	import { SegmentStateEnum, segmentNames } from '../types';
 	export async function load({ fetch }) {
 		const res = await fetch('/api/current_traffic');
 		if (res.ok) {
-			const snapshot = await res.json();
+
+			const getSegmentState = (segmentData) => {
+				if (segmentData.pedestrian === '' && segmentData.last_data_package) {
+					return SegmentStateEnum.INACTIVE;
+				} else if (segmentData.pedestrian === '') {
+					return SegmentStateEnum.NEW;
+				}
+				return SegmentStateEnum.ACTIVE;
+			} 
+			
+			const resp = await res.json();
+			console.log(resp);
+			/** @type {Array.<SegmentGeoJSONData>} snapshot */
+			const snapshot = resp.features.map(el => ({
+				type: el.type,
+				geometry: el.geometry,
+				properties: {
+					segment_id: el.properties.segment_id,
+					name: segmentNames[el.properties.segment_id],
+					date: el.properties.date,
+					pedestrian: el.properties.pedestrian,
+					bike: el.properties.bike,
+					car: el.properties.car,
+					heavy: el.properties.heavy,
+					state: getSegmentState(el.properties),
+					last_data_package: el.properties.last_data_package
+				}
+			}));
 			console.log(snapshot);
 			return {
 				props: {
