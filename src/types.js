@@ -34,11 +34,13 @@ export const SegmentStateEnum = {
 /** @type {Object.<number,string>} */
 export const segmentNames = {
 	9000003081: 'Dahliastraat',
+	9000002436: 'Dahliastraat',
 	9000000795: 'Pannestraat',
 	529611: 'Gasmeterlaan',
 	9000003002: 'Mimosastraat',
 	9000003050: 'Fuchsiastraat',
 	9000003058: 'Klaverstraat',
 	9000003062: 'Dracenastraat',
-	9000003073: 'Grensstraat'
+	9000003073: 'Grensstraat',
+	9000003094: 'Francisco Ferrerlaan'
 };
