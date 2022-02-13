@@ -1,16 +1,35 @@
 <script>
-	import {SegmentStateEnum} from '../../types';
+	import { SegmentStateEnum, MetricEnum } from '../../types';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/env';
 	import MapPopup from './MapPopup.svelte';
 
+	let leaflet;
+	let map;
+	let geoJSONLayer;
 	export let snapshot;
+	export let metric;
 
 	let streetStyle = {
 		color: '#3cb371',
 		weight: 10,
 		opacity: 0.9
 	};
+
+	function updateMap(sn, mt) {
+		if (leaflet && map) {
+			if (geoJSONLayer) {
+				map.removeLayer(geoJSONLayer);
+			}
+			geoJSONLayer = leaflet.geoJSON(sn, {
+				onEachFeature: onEachFeature,
+				style: (ft) => styleFeature(ft, mt)
+			});
+			geoJSONLayer.addTo(map);
+		}
+	}
+
+	$: updateMap(snapshot, metric);
 
 	function bindPopup(layer, createFn) {
 		let popupComponent;
@@ -44,7 +63,10 @@
 				let c = new MapPopup({
 					target: container,
 					props: {
-						properties
+						properties: {
+							...properties,
+							metric
+						}
 					}
 				});
 				return c;
@@ -76,7 +98,7 @@
 		}
 	}
 
-	function styleFeature(feature) {
+	function styleFeatureNone(feature) {
 		switch (feature.properties.state) {
 			case SegmentStateEnum.ACTIVE:
 				return streetStyle;
@@ -89,12 +111,32 @@
 				return { ...streetStyle, color: '#3cb371' };
 		}
 	}
+	function styleFeatureMetric(feature, mt) {
+		switch (feature.properties.metrics?.[mt.name].rank) {
+			case 1:
+				return { ...streetStyle, color: '#3cb371' };
+			case 2:
+				return { ...streetStyle, color: '#ffa500' };
+			default:
+				if (isNaN(feature.properties.metrics?.[mt.name].rank)) {
+					return { ...streetStyle, color: '#808080' };
+				} else {
+					return { ...streetStyle, color: '#ff0000' };
+				}
+		}
+	}
+	function styleFeature(feature, mt) {
+		if (mt.name === MetricEnum.NONE.name) {
+			return styleFeatureNone(feature);
+		}
+		return styleFeatureMetric(feature, mt);
+	}
 
 	onMount(async () => {
 		if (browser) {
-			const leaflet = await import('leaflet');
+			leaflet = await import('leaflet');
 
-			const map = leaflet.map('map', { minZoom: 13 }).setView([51.069, 3.703], 16);
+			map = leaflet.map('map', { minZoom: 13 }).setView([51.069, 3.703], 16);
 
 			leaflet
 				.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
@@ -125,14 +167,10 @@
 			//     ext: 'jpg'
 			// }).addTo(map);
 
-			leaflet
-				.geoJSON(snapshot, {
-					onEachFeature: onEachFeature,
-					style: styleFeature
-				})
-				.addTo(map);
+			updateMap(snapshot, metric);
 		}
 	});
+	export function rerenderMap() {}
 </script>
 
 <main>

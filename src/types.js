@@ -10,21 +10,97 @@ export const SegmentStateEnum = {
 	INACTIVE: 'Niet actief, geen data beschikbaar'
 };
 
+const computeVulnerableCarRatio = (records) => {
+	let bike = 0;
+	let car = 0;
+	let heavy = 0;
+	let pedestrian = 0;
+	records.forEach((rc) => {
+		pedestrian += rc.pedestrian;
+		bike += rc.bike;
+		car += rc.car;
+		heavy += rc.heavy;
+	});
+	return (bike + pedestrian) / (car + heavy);
+};
+
+const computeTooFast20 = (records, speed_limit) => {
+	let all_hist_values = 0;
+	let too_fast = 0;
+	records.forEach((rc) => {
+		all_hist_values += rc.car_speed_hist_0to120plus.reduce((s, hist) => s + hist, 0);
+		too_fast += rc.car_speed_hist_0to120plus.reduce(
+			(s, hist, idx) =>
+				s + ((idx + 1) * 5 > speed_limit && (idx + 1) * 5 <= 1.2 * speed_limit) * hist,
+			0
+		);
+	});
+	return (100 * too_fast) / all_hist_values;
+};
+
+const computeTooFast20Plus = (records, speed_limit) => {
+	let all_hist_values = 0;
+	let too_fast = 0;
+	records.forEach((rc) => {
+		all_hist_values += rc.car_speed_hist_0to120plus.reduce((s, hist) => s + hist, 0);
+		too_fast += rc.car_speed_hist_0to120plus.reduce(
+			(s, hist, idx) =>
+				s + ((idx + 1) * 5 > speed_limit && (idx + 1) * 5 <= 1.2 * speed_limit) * hist,
+			0
+		);
+	});
+	return (100 * too_fast) / all_hist_values;
+};
+
+/**
+ * @typedef MetricProps
+ * @string name
+ * @function computeMetric
+ * @bool decreasing
+ */
+
+/**
+ * @typedef MetricEnum
+ * @enum {MetricProps}
+ */
+export const MetricEnum = {
+	NONE: {
+		name: 'Geen'
+	},
+	VULNERABLE_ROAD_USER_TO_CAR: {
+		name: 'Zwakke weggebruikers/sterke weggebruikers',
+		computeMetric: computeVulnerableCarRatio,
+		decreasing: false,
+		metricName: 'zwakke weggebruikers / voertuig'
+	},
+	TOO_FAST_120_PERCENT: {
+		name: '< 20% boven snelheidslimiet',
+		computeMetric: computeTooFast20,
+		decreasing: true,
+		metricName: '% van de voertuigen 1-20% boven snelheidslimiet'
+	},
+	TOO_FAST_120_PERCENT_PLUS: {
+		name: '> 20% boven snelheidslimiet',
+		computeMetric: computeTooFast20Plus,
+		decreasing: true,
+		metricName: '% van de voertuigen 21%-... boven snelheidslimiet'
+	}
+};
 /**
  * @typedef {Object} SegmentData
  * @property {number} segment_id
  * @property {string} name
  * @property {number} speed_limit
  * @property {string} date
+ * @property {string} dateStart (only present in case of a traffic_snapshot call)
+ * @property {string} dateEnd (only present in case of a traffic_snapshot call)
  * @property {number} pedestrian
  * @property {number} bike
  * @property {number} car
  * @property {number} heavy
  * @property {number} total_hours (only present in case of a traffic_snapshot call)
  * @property {number} uptime (only present in case of a traffic_snapshot call)
- * @property {RankingMetric} vulnerable_road_user_to_car_ratio (only present in case of a traffic_snapshot call)
- * @property {RankingMetric} too_fast_120_percent (only present in case of a traffic_snapshot call, 100-120% of speed limit)
- * @property {RankingMetric} too_fast_120_percent_plus (only present in case of a traffic_snapshot call, >120% of speed limit)
+ * @property {Object.<string, RankingMetric>} metrics (only present in case of a traffic_snapshot call)
  * @property {SegmentStateEnum} state
  * @property {string} last_data_package
  */
@@ -68,10 +144,6 @@ export const SegmentStateEnum = {
 
 // TODO - add API call to get location metadata instead of hardcoding
 /** @type {Object.<number,string>} */
-const streets = [
-	529611, 9000000795, 9000002436, 9000003002, 9000003050, 9000003058, 9000003062, 9000003073,
-	9000003081, 9000003094
-];
 export const segmentProperties = {
 	9000002436: {
 		name: 'Dahliastraat',
@@ -111,6 +183,10 @@ export const segmentProperties = {
 	},
 	9000003094: {
 		name: 'Francisco Ferrerlaan',
+		speed_limit: 50 // TODO look up
+	},
+	9000003149: {
+		name: 'Maïsstraat',
 		speed_limit: 50 // TODO look up
 	}
 };

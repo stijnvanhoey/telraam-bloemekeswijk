@@ -1,4 +1,4 @@
-import { SegmentStateEnum, segmentProperties } from './types';
+import { SegmentStateEnum, segmentProperties, MetricEnum } from './types';
 
 /**
  * @function
@@ -16,6 +16,47 @@ export function getSegmentState(segmentData) {
 
 /**
  * @function
+ * @param metrics Array<RankingMetric>
+ * @param decreasing bool (default: true)
+ * @return Array<RankingMetric>
+ */
+export function sortMetric(metrics, decreasing = true) {
+	let sorted = [];
+	metrics.forEach((m, i) => {
+		sorted[i] = { value: m?.value, index: i };
+	});
+	if (!decreasing) {
+		sorted.sort((a, b) => {
+			if (a === undefined) {
+				return -10e6;
+			} else if (b === undefined) {
+				return 10e6;
+			}
+			return b.value - a.value;
+		});
+	} else {
+		sorted.sort((a, b) => {
+			if (a === undefined) {
+				return 10e6;
+			} else if (b === undefined) {
+				return -10e6;
+			}
+			return a.value - b.value;
+		});
+	}
+	let updatedMetrics = JSON.parse(JSON.stringify(metrics));
+	let rank = 1;
+	sorted.forEach((c) => {
+		if (updatedMetrics[c.index]) {
+			updatedMetrics[c.index].rank = rank;
+			rank += 1;
+		}
+	});
+	return updatedMetrics;
+}
+
+/**
+ * @function
  * @param records Array<TrafficSnapshotData>
  * @return SegmentData
  */
@@ -25,59 +66,49 @@ export function aggregateTrafficSnapshotData(records) {
 			segment_id: 0,
 			name: '',
 			date: '',
+			dateStart: '',
+			dateEnd: '',
 			pedestrian: 0,
 			bike: 0,
 			car: 0,
 			heavy: 0,
 			total_hours: 0,
 			uptime: 0,
-			vulnerable_road_user_to_car_ratio: null,
-			too_fast_120_percent: null,
-			too_fast_120_percent_plus: null,
+			metrics: {},
 			state: '',
 			last_data_package: ''
 		};
 	}
 	const segment_id = records[0].segment_id;
-	const total_uptime = records.reduce((sum, rc) => sum + rc.uptime, 0);
-	const total_hours = records.reduce((sum, rc) => {
-		if (rc.interval === 'hourly') {
-			sum += 1;
-		} else if (rc.interval === 'daily') {
-			sum += 24;
-		} else {
-			console.error(`Unexpected interval value ${rc.interval} for segment ${segment_id}`);
-		}
-		return sum;
-	}, 0);
 	const out = {
 		segment_id: segment_id,
 		name: segmentProperties[segment_id]?.name || '',
 		speed_limit: segmentProperties[segment_id]?.speed_limit || '',
-		date: records[-1]?.speed_limit,
+		date: '',
+		dateStart: records[0].date,
+		dateEnd: records[records.length - 1].date,
 		pedestrian: 0,
 		bike: 0,
 		car: 0,
 		heavy: 0,
 		total_hours: 0,
 		uptime: 0,
-		vulnerable_road_user_to_car_ratio: {
-			value: 0,
-			rank: 0
-		},
-		too_fast_120_percent: {
-			value: 0,
-			rank: 0
-		},
-		too_fast_120_percent_plus: {
-			value: 0,
-			rank: 0
-		},
+		metrics: Object.values(MetricEnum)
+			.filter((m) => m.name !== MetricEnum.NONE.name)
+			.reduce(
+				(dict, m) => ({
+					...dict,
+					[m.name]: {
+						value: 0,
+						rank: 0
+					}
+				}),
+				{}
+			),
 		// current state, expecting chronological ordering
 		state: getSegmentState(records[records.length - 1]),
 		last_data_package: records[records.length - 1].last_data_package
 	};
-	let all_hist_values = 0;
 	records.forEach((rc) => {
 		out.uptime += rc.uptime;
 		if (rc.interval === 'hourly') {
@@ -91,20 +122,15 @@ export function aggregateTrafficSnapshotData(records) {
 		out.bike += rc.bike;
 		out.car += rc.car;
 		out.heavy += rc.heavy;
-		all_hist_values += rc.car_speed_hist_0to120plus.reduce((s, hist) => s + hist, 0);
-		out.too_fast_120_percent.value += rc.car_speed_hist_0to120plus.reduce(
-			(s, hist, idx) =>
-				s + ((idx + 1) * 5 > out.speed_limit && (idx + 1) * 5 <= 1.2 * out.speed_limit) * hist,
-			0
-		);
-		out.too_fast_120_percent_plus.value = rc.car_speed_hist_0to120plus.reduce(
-			(s, hist, idx) => s + ((idx + 1) * 5 > 1.2 * out.speed_limit) * hist,
-			0
-		);
 	});
 	out.uptime /= records.length;
-	out.too_fast_120_percent.value /= all_hist_values;
-	out.too_fast_120_percent_plus.value /= all_hist_values;
-	out.vulnerable_road_user_to_car_ratio.value = (out.bike + out.pedestrian) / (out.car + out.heavy);
+	Object.values(MetricEnum)
+		.filter((m) => m.name !== MetricEnum.NONE.name)
+		.forEach((m) => {
+			out.metrics[m.name] = {
+				value: m.computeMetric(records, out.speed_limit),
+				rank: 0
+			};
+		});
 	return out;
 }
