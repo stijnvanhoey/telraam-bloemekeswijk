@@ -55,11 +55,17 @@
 	let switch1 = false;
 	let switch2 = false;
 	let switch3 = false;
-	const updateMetric = (m) => {
+	const updateMetric = (m, v) => {
 		// TODO can this easily be generalized?
+		console.log('here');
 		switch (m) {
 			case MetricEnum.VULNERABLE_ROAD_USER_TO_CAR: {
 				if (switch1 === false) {
+					if (switch2 || switch3) {
+						// This is only triggered by enabling another metric.
+						// Ignore in this case.
+						return;
+					}
 					metric = MetricEnum.NONE;
 				} else {
 					metric = m;
@@ -70,6 +76,11 @@
 			}
 			case MetricEnum.TOO_FAST_120_PERCENT: {
 				if (switch2 === false) {
+					if (switch1 || switch3) {
+						// This is only triggered by enabling another metric.
+						// Ignore in this case.
+						return;
+					}
 					metric = MetricEnum.NONE;
 				} else {
 					metric = m;
@@ -80,6 +91,11 @@
 			}
 			case MetricEnum.TOO_FAST_120_PERCENT_PLUS: {
 				if (switch3 === false) {
+					if (switch1 || switch2) {
+						// This is only triggered by enabling another metric.
+						// Ignore in this case.
+						return;
+					}
 					metric = MetricEnum.NONE;
 				} else {
 					metric = m;
@@ -90,12 +106,12 @@
 			}
 		}
 	};
-	$: switch1 && updateMetric(MetricEnum.VULNERABLE_ROAD_USER_TO_CAR);
-	$: !switch1 && updateMetric(MetricEnum.VULNERABLE_ROAD_USER_TO_CAR);
-	$: switch2 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT);
-	$: !switch2 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT);
-	$: switch3 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT_PLUS);
-	$: !switch3 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT_PLUS);
+	$: switch1 && updateMetric(MetricEnum.VULNERABLE_ROAD_USER_TO_CAR, true);
+	$: !switch1 && updateMetric(MetricEnum.VULNERABLE_ROAD_USER_TO_CAR, false);
+	$: switch2 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT, true);
+	$: !switch2 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT, false);
+	$: switch3 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT_PLUS, true);
+	$: !switch3 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT_PLUS, false);
 	export let snapshot = [];
 	const timeEnd = new Date();
 	let timeStart = new Date(timeEnd);
