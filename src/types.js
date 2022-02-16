@@ -147,46 +147,46 @@ export const MetricEnum = {
 export const segmentProperties = {
 	9000002436: {
 		name: 'Dahliastraat',
-		speed_limit: 50 // TODO look up
+		speed_limit: 30
 	},
 	9000000795: {
 		name: 'Pannestraat',
-		speed_limit: 50 // TODO look up
+		speed_limit: 30
 	},
 	529611: {
 		name: 'Gasmeterlaan',
-		speed_limit: 50 // TODO look up
+		speed_limit: 50
 	},
 	9000003002: {
 		name: 'Mimosastraat',
-		speed_limit: 50 // TODO look up
+		speed_limit: 30
 	},
 	9000003050: {
 		name: 'Fuchsiastraat',
-		speed_limit: 50 // TODO look up
+		speed_limit: 30
 	},
 	9000003058: {
 		name: 'Klaverstraat',
-		speed_limit: 50 // TODO look up
+		speed_limit: 30
 	},
 	9000003062: {
 		name: 'Dracenastraat',
-		speed_limit: 50 // TODO look up
+		speed_limit: 50
 	},
 	9000003073: {
 		name: 'Grensstraat',
-		speed_limit: 50 // TODO look up
+		speed_limit: 30
 	},
 	9000003081: {
 		name: 'Dahliastraat',
-		speed_limit: 50 // TODO look up
+		speed_limit: 30
 	},
 	9000003094: {
 		name: 'Francisco Ferrerlaan',
-		speed_limit: 50 // TODO look up
+		speed_limit: 50
 	},
 	9000003149: {
 		name: 'Maïsstraat',
-		speed_limit: 50 // TODO look up
+		speed_limit: 30
 	}
 };
