@@ -1,12 +1,23 @@
 ---
 slug: 2022-02-22-citizen-science
-title: Maak kennis met meetstation MIMOSA
+title: Meetstation MIMOSA
 date: 2022-02-22
 author: davy
-banner: telraam_box.jpg
+banner: mimosa.png
 excerpt: 'Een klein beetje van onze wereld in kaart brengen om die zo beter te begrijpen.'
 tags: ['meten']
 ---
+
+<script>
+  import Image from "$lib/components/Image.svelte";
+</script>
+
+<Image
+  filename="mimosa.png"
+  alt="Mimosa plan zoom."
+  floatClass="float-left"
+  width="300px"
+/>
 
 Mimosa moest meedoen! Zoveel stond vast. Mee aan de kar trekken van een wijs project. Niet klagen en zagen maar gewoon doen doen doen! En voila ondertussen hangen er al twee meetstations tegen onze ramen.  Eentje voor de luchtkwaliteit en eentje  om het verkeer te meten.  Want de tijd dat we vanalles te weten konden komen door de Tarot te leggen of de vlucht van de duiven te bestuderen is al lang gepasseerd. En eerlijk... mocht het niet zijn dat mijn gebuur zo sympathiek was om zo’n meetspel in zijn gazon te prikken waarmee ze het grondwaterpeil in kaart brengen, awel: ik had het wel tussen mijn graszoden geprikt.
 
@@ -16,6 +27,7 @@ Daarom dat we met volle goesting meetellen met TELRAAM. Zo krijgen we samen bete
 
 Dat doen we dus in de Mimosastraat. Een klein beetje van onze wereld in kaart brengen om die zo beter te begrijpen.
 
-- Luchtkwaliteit: Gentenair (https://gentenair.be/resultaten)
-- Grondwaterstand: Curieuzeneuzen in de tuin (https://curieuzeneuzen.be)
-- Verkeer: Telraam (https://www.telraam.net/#14/51.0732/3.7063°
+- Luchtkwaliteit: [Gentenair](https://gentenair.be/resultaten)
+- Grondwaterstand: [Curieuzeneuzen in de tuin](https://curieuzeneuzen.be)
+- Verkeer: [Telraam](https://www.telraam.net/#14/51.0732/3.7063°)
+
