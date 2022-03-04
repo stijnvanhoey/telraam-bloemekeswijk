@@ -2,7 +2,7 @@ import rateLimit from '../_utils/_lru_cache';
 
 const limiter = rateLimit({
 	interval: 60 * 1000, // 60 seconds
-	uniqueTokenPerInterval: 10 // Max 10 users per second
+	uniqueTokenPerInterval: 20 // Max 10 users per second
 });
 
 export async function get(request) {
@@ -17,7 +17,6 @@ export async function get(request) {
 			error: new Error(`Rate limit exceeded.`)
 		};
 	} else {
-		console.log(`${request.params.segmentid}`);
 		console.log('Requesting speed data from API telraam...');
 		const token = import.meta.env.VITE_TELRAAM_API_KEY;
 		const url = 'https://telraam-api.net/v1/reports/traffic';

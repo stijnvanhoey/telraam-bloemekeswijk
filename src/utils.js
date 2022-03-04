@@ -18,9 +18,10 @@ export function getSegmentState(segmentData) {
  * @function
  * @param metrics Array<RankingMetric>
  * @param decreasing bool (default: true)
+ * @param customRankFunction function (default: null)
  * @return Array<RankingMetric>
  */
-export function sortMetric(metrics, decreasing = true) {
+export function sortMetric(metrics, decreasing = true, customRankFunction = null) {
 	let sorted = [];
 	metrics.forEach((m, i) => {
 		sorted[i] = { value: m?.value, index: i };
@@ -48,8 +49,12 @@ export function sortMetric(metrics, decreasing = true) {
 	let rank = 1;
 	sorted.forEach((c) => {
 		if (updatedMetrics[c.index]) {
-			updatedMetrics[c.index].rank = rank;
-			rank += 1;
+			if (customRankFunction) {
+				updatedMetrics[c.index].rank = customRankFunction(updatedMetrics[c.index].value);
+			} else {
+				updatedMetrics[c.index].rank = rank;
+				rank += 1;
+			}
 		}
 	});
 	return updatedMetrics;
@@ -133,4 +138,30 @@ export function aggregateTrafficSnapshotData(records) {
 			};
 		});
 	return out;
+}
+
+/**
+ * @function
+ * @param ms number delay in ms
+ */
+export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * @function
+ * @param urls Array<string>
+ * @param delayMs number ms between calls
+ * @param toJson boolean If true, await json
+ * @return Array<any>
+ */
+export async function chainFetches(urls, delayMs = 0, toJson = true) {
+	let responses = [];
+	for (let url of urls) {
+		if (toJson) {
+			responses.push(await (await fetch(url)).json());
+		} else {
+			responses.push(await (await fetch(url)).text());
+		}
+		await delay(delayMs);
+	}
+	return responses;
 }

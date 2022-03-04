@@ -24,32 +24,33 @@ const computeVulnerableCarRatio = (records) => {
 	return (bike + pedestrian) / (car + heavy);
 };
 
-const computeTooFast20 = (records, speed_limit) => {
+const computeCorrectSpeedRatio = (records, speed_limit) => {
 	let all_hist_values = 0;
 	let too_fast = 0;
 	records.forEach((rc) => {
 		all_hist_values += rc.car_speed_hist_0to120plus.reduce((s, hist) => s + hist, 0);
 		too_fast += rc.car_speed_hist_0to120plus.reduce(
-			(s, hist, idx) =>
-				s + ((idx + 1) * 5 > speed_limit && (idx + 1) * 5 <= 1.2 * speed_limit) * hist,
+			(s, hist, idx) => s + ((idx + 1) * 5 <= speed_limit) * hist,
 			0
 		);
 	});
 	return (100 * too_fast) / all_hist_values;
 };
 
-const computeTooFast20Plus = (records, speed_limit) => {
-	let all_hist_values = 0;
-	let too_fast = 0;
+const computeSpeedingViolationSpeed = (records, speed_limit) => {
+	let aggregate_violation_number = 0;
+	let aggregate_violation_speed = 0;
 	records.forEach((rc) => {
-		all_hist_values += rc.car_speed_hist_0to120plus.reduce((s, hist) => s + hist, 0);
-		too_fast += rc.car_speed_hist_0to120plus.reduce(
-			(s, hist, idx) =>
-				s + ((idx + 1) * 5 > speed_limit && (idx + 1) * 5 <= 1.2 * speed_limit) * hist,
+		aggregate_violation_number += rc.car_speed_hist_0to120plus.reduce(
+			(s, hist, idx) => s + ((idx + 1) * 5 > speed_limit) * hist,
+			0
+		);
+		aggregate_violation_speed += rc.car_speed_hist_0to120plus.reduce(
+			(s, hist, idx) => s + ((idx + 1) * 5 > speed_limit) * (idx + 1) * 5 * hist,
 			0
 		);
 	});
-	return (100 * too_fast) / all_hist_values;
+	return aggregate_violation_speed / aggregate_violation_number - speed_limit;
 };
 
 /**
@@ -71,19 +72,31 @@ export const MetricEnum = {
 		name: 'Zwakke weggebruikers/sterke weggebruikers',
 		computeMetric: computeVulnerableCarRatio,
 		decreasing: false,
+		showSpeedLimit: false,
 		metricName: 'zwakke weggebruikers / voertuig'
 	},
-	TOO_FAST_120_PERCENT: {
-		name: '< 20% boven snelheidslimiet',
-		computeMetric: computeTooFast20,
-		decreasing: true,
-		metricName: '% van de voertuigen 1-20% boven snelheidslimiet'
+	RATIO_SPEEDING_VIOLATION: {
+		name: '% chauffeurs binnen snelheidslimiet',
+		computeMetric: computeCorrectSpeedRatio,
+		decreasing: false,
+		showSpeedLimit: true,
+		computeRank: (x) => {
+			// 3 categorieën: >= 85% goede chauffeurs, >= 75% goede chauffeurs, < 75% goede chauffeurs
+			if (x < 75) {
+				return 3;
+			} else if (x < 85) {
+				return 2;
+			}
+			return 1;
+		},
+		metricName: '% van de chauffeurs binnen de snelheidslimiet'
 	},
-	TOO_FAST_120_PERCENT_PLUS: {
-		name: '> 20% boven snelheidslimiet',
-		computeMetric: computeTooFast20Plus,
+	SPEEDING_VIOLATION_SPEED: {
+		name: 'Gemiddelde snelheid bij snelheidsovertreding',
+		computeMetric: computeSpeedingViolationSpeed,
 		decreasing: true,
-		metricName: '% van de voertuigen 21%-... boven snelheidslimiet'
+		showSpeedLimit: true,
+		metricName: 'km/u boven snelheidslimiet'
 	}
 };
 /**

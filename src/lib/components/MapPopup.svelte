@@ -18,8 +18,9 @@
 	const currentDateStr = new Date(Date.parse(currentDateString)).toLocaleString('nl-BE', options);
 	const currentHourNum = new Date(Date.parse(currentDateString)).getHours();
 	const previousDateStr = new Date(Date.parse(previousDateString)).toLocaleString('nl-BE', options);
-	const previousHourNum = new Date(Date.parse(previousDateStr)).getHours();
+	const previousHourNum = new Date(Date.parse(previousDateString)).getHours();
 	const isMetric = properties.metric.name !== MetricEnum.NONE.name;
+	const showSpeedLimit = properties.metric.showSpeedLimit;
 	const isNotWorking = isMetric && isNaN(properties.metrics?.[properties.metric.name]?.rank);
 	const isInactive =
 		properties.state === SegmentStateEnum.INACTIVE ||
@@ -57,8 +58,11 @@
 		{#if !isMetric}
 			{properties.state}<br />
 		{/if}
+		{#if isMetric && showSpeedLimit}
+			Snelheidslimiet: {properties.speed_limit} km/u<br />
+		{/if}
 		{#if isDefault && !isFirst && !isNotWorking}
-			Snelheidslimiet: {properties.speed_limit} km/h<br />
+			Snelheidslimiet: {properties.speed_limit} km/u<br />
 			Hier zijn tussen {currentDate}
 			{currentHour} uur<br /> en {previousDate}
 			{previousHour} uur<br />

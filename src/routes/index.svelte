@@ -1,11 +1,15 @@
 <script context="module">
 	import { segmentProperties } from '../types';
-	import { getSegmentState, aggregateTrafficSnapshotData, sortMetric } from '../utils';
+	import {
+		getSegmentState,
+		aggregateTrafficSnapshotData,
+		sortMetric,
+		chainFetches
+	} from '../utils';
 	export async function load({ fetch }) {
 		const res = await fetch('/api/current_traffic');
 		if (res.ok) {
 			const resp = await res.json();
-			console.log(resp);
 			/** @type {Array.<SegmentGeoJSONData>} snapshot */
 			let snapshot = resp.features.map((el) => ({
 				type: el.type,
@@ -23,7 +27,6 @@
 					last_data_package: el.properties.last_data_package
 				}
 			}));
-			console.log(snapshot);
 			return {
 				props: {
 					snapshot
@@ -56,8 +59,6 @@
 	let switch2 = false;
 	let switch3 = false;
 	const updateMetric = (m, v) => {
-		// TODO can this easily be generalized?
-		console.log('here');
 		switch (m) {
 			case MetricEnum.VULNERABLE_ROAD_USER_TO_CAR: {
 				if (switch1 === false) {
@@ -74,7 +75,7 @@
 				}
 				break;
 			}
-			case MetricEnum.TOO_FAST_120_PERCENT: {
+			case MetricEnum.RATIO_SPEEDING_VIOLATION: {
 				if (switch2 === false) {
 					if (switch1 || switch3) {
 						// This is only triggered by enabling another metric.
@@ -89,7 +90,7 @@
 				}
 				break;
 			}
-			case MetricEnum.TOO_FAST_120_PERCENT_PLUS: {
+			case MetricEnum.SPEEDING_VIOLATION_SPEED: {
 				if (switch3 === false) {
 					if (switch1 || switch2) {
 						// This is only triggered by enabling another metric.
@@ -108,31 +109,24 @@
 	};
 	$: switch1 && updateMetric(MetricEnum.VULNERABLE_ROAD_USER_TO_CAR, true);
 	$: !switch1 && updateMetric(MetricEnum.VULNERABLE_ROAD_USER_TO_CAR, false);
-	$: switch2 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT, true);
-	$: !switch2 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT, false);
-	$: switch3 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT_PLUS, true);
-	$: !switch3 && updateMetric(MetricEnum.TOO_FAST_120_PERCENT_PLUS, false);
+	$: switch2 && updateMetric(MetricEnum.RATIO_SPEEDING_VIOLATION, true);
+	$: !switch2 && updateMetric(MetricEnum.RATIO_SPEEDING_VIOLATION, false);
+	$: switch3 && updateMetric(MetricEnum.SPEEDING_VIOLATION_SPEED, true);
+	$: !switch3 && updateMetric(MetricEnum.SPEEDING_VIOLATION_SPEED, false);
 	export let snapshot = [];
 	const timeEnd = new Date();
 	let timeStart = new Date(timeEnd);
-	timeStart.setMonth(timeStart.getMonth() - 1);
+	timeStart.setDate(timeStart.getDate() - 7);
 	onMount(() => {
-		const updateProperties = Promise.all(
-			snapshot.map((segment) => {
-				return fetch(
+		const updateProperties = chainFetches(
+			snapshot.map(
+				(segment) =>
 					`/api/speed-${
 						segment.properties.segment_id
 					}-${timeStart.toUTCString()}-${timeEnd.toUTCString()}`
-				);
-			})
+			),
+			1.1 // avoid rate-limiting telraam API
 		)
-			.then((responses) => {
-				return Promise.all(
-					responses.map((res) => {
-						return res.json();
-					})
-				);
-			})
 			.then((speeds) => {
 				const updateProperties = speeds.map((speed) => aggregateTrafficSnapshotData(speed.report));
 				const updatedSnapshot = JSON.parse(JSON.stringify(snapshot));
@@ -146,7 +140,8 @@
 					.forEach((m) => {
 						const updatedMetrics = sortMetric(
 							updatedSnapshot.map((s) => s.properties.metrics?.[m.name]),
-							m.decreasing
+							m.decreasing,
+							m.computeRank
 						);
 						updatedMetrics.forEach((um, i) => {
 							if (um) {
@@ -168,6 +163,6 @@
 <Map {snapshot} {metric} />
 <div id="metric-group" class="border paper form-group flex-spaces" hidden={!metricsAvailable}>
 	<Switch bind:checked={switch1}>{MetricEnum.VULNERABLE_ROAD_USER_TO_CAR.name}</Switch><br />
-	<Switch bind:checked={switch2}>{MetricEnum.TOO_FAST_120_PERCENT.name}</Switch><br />
-	<Switch bind:checked={switch3}>{MetricEnum.TOO_FAST_120_PERCENT_PLUS.name}</Switch><br />
+	<Switch bind:checked={switch2}>{MetricEnum.RATIO_SPEEDING_VIOLATION.name}</Switch><br />
+	<Switch bind:checked={switch3}>{MetricEnum.SPEEDING_VIOLATION_SPEED.name}</Switch><br />
 </div>
