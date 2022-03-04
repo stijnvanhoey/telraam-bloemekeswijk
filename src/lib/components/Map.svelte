@@ -1,5 +1,6 @@
 <script>
 	import { SegmentStateEnum, MetricEnum } from '../../types';
+	import { colorFeatureMetric } from '../../utils';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/env';
 	import MapPopup from './MapPopup.svelte';
@@ -111,25 +112,12 @@
 				return { ...streetStyle, color: '#3cb371' };
 		}
 	}
-	function styleFeatureMetric(feature, mt) {
-		switch (feature.properties.metrics?.[mt.name].rank) {
-			case 1:
-				return { ...streetStyle, color: '#3cb371' };
-			case 2:
-				return { ...streetStyle, color: '#ffa500' };
-			default:
-				if (isNaN(feature.properties.metrics?.[mt.name].rank)) {
-					return { ...streetStyle, color: '#808080' };
-				} else {
-					return { ...streetStyle, color: '#ff0000' };
-				}
-		}
-	}
+
 	function styleFeature(feature, mt) {
 		if (mt.name === MetricEnum.NONE.name) {
 			return styleFeatureNone(feature);
 		}
-		return styleFeatureMetric(feature, mt);
+		return { ...streetStyle, color: colorFeatureMetric(feature, mt) };
 	}
 
 	onMount(async () => {

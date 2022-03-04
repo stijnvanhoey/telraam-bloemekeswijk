@@ -125,7 +125,7 @@
 						segment.properties.segment_id
 					}-${timeStart.toUTCString()}-${timeEnd.toUTCString()}`
 			),
-			1.1 // avoid rate-limiting telraam API
+			1100 // avoid rate-limiting telraam API
 		)
 			.then((speeds) => {
 				const updateProperties = speeds.map((speed) => aggregateTrafficSnapshotData(speed.report));
@@ -140,8 +140,7 @@
 					.forEach((m) => {
 						const updatedMetrics = sortMetric(
 							updatedSnapshot.map((s) => s.properties.metrics?.[m.name]),
-							m.decreasing,
-							m.computeRank
+							m.decreasing
 						);
 						updatedMetrics.forEach((um, i) => {
 							if (um) {

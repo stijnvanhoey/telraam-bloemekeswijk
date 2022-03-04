@@ -1,6 +1,7 @@
 <script>
 	import { Badge } from 'spaper';
 	import { MetricEnum, SegmentStateEnum } from '../../types';
+	import { colorFeatureMetric } from '../../utils';
 
 	export let properties;
 	let previousDateString = properties.dateStart ?? properties.date;
@@ -21,7 +22,24 @@
 	const previousHourNum = new Date(Date.parse(previousDateString)).getHours();
 	const isMetric = properties.metric.name !== MetricEnum.NONE.name;
 	const showSpeedLimit = properties.metric.showSpeedLimit;
-	const isNotWorking = isMetric && isNaN(properties.metrics?.[properties.metric.name]?.rank);
+	const isNotWorking = isMetric && isNaN(properties.metrics?.[properties.metric.name]?.value);
+	let backgroundColor;
+	if (isNotWorking) {
+		// gray
+		backgroundColor = '#808080';
+	} else if (isMetric) {
+		backgroundColor = colorFeatureMetric({ properties }, properties.metric);
+	} else if (properties.state === SegmentStateEnum.INACTIVE) {
+		// red
+		backgroundColor = 'ff0000';
+	} else if (properties.state === SegmentStateEnum.NEW) {
+		// orange
+		backgroundColor = '#ffa500';
+	} else {
+		// green
+		backgroundColor = '#3cb371';
+	}
+	const style = `background-color=${backgroundColor}`;
 	const isInactive =
 		properties.state === SegmentStateEnum.INACTIVE ||
 		(isMetric &&
@@ -36,8 +54,6 @@
 		isMetric &&
 		!isNaN(properties.metrics?.[properties.metric.name]?.rank) &&
 		properties.metrics[properties.metric.name].rank === 1;
-	// const isInactive = properties.state === SegmentStateEnum.INACTIVE;
-	// const isNew = properties.state === SegmentStateEnum.NEW;
 
 	const isDefault = !isInactive && !isNew;
 	$: currentDate = currentDateStr === 'Invalid Date' ? '-' : currentDateStr;
@@ -48,10 +64,7 @@
 
 <div
 	class="border padding-left-small padding-right-small shadow shadow-small"
-	class:popup-not-working={isNotWorking}
-	class:popup-inactive-worst={isInactive}
-	class:popup-new-medium={isNew}
-	class:popup={isDefault}
+	style="background-color: {backgroundColor}"
 >
 	<h4>{properties.name}</h4>
 	<h5 class="child-borders">
@@ -63,9 +76,9 @@
 		{/if}
 		{#if isDefault && !isFirst && !isNotWorking}
 			Snelheidslimiet: {properties.speed_limit} km/u<br />
-			Hier zijn tussen {currentDate}
-			{currentHour} uur<br /> en {previousDate}
-			{previousHour} uur<br />
+			Hier zijn tussen {previousDate}
+			{previousHour} uur<br /> en {currentDate}
+			{currentHour} uur<br />
 			<Badge type="primary">
 				{Math.round(properties.pedestrian)}
 				<svg
@@ -147,9 +160,9 @@
 			{properties.metrics[properties.metric.name].rank}e<br />
 			met {Math.round(properties.metrics[properties.metric.name].value * 100) / 100}
 			{properties.metric.metricName}<br />
-			tussen {currentDate}
-			{currentHour} uur<br /> en {previousDate}
-			{previousHour} uur
+			tussen {previousDate}
+			{previousHour} uur<br /> en {currentDate}
+			{currentHour} uur
 		{/if}
 		{#if isMetric && isNotWorking}
 			{properties.state}<br />
@@ -159,33 +172,3 @@
 	</h5>
 	<a href="https://telraam.net/nl/location/{properties.segment_id}">Toon me meer data...</a>
 </div>
-
-<style>
-	.popup {
-		background-color: #3cb371;
-	}
-
-	.popup-inactive-worst {
-		background-color: #ff0000;
-	}
-
-	.popup-new-medium {
-		background-color: #ffa500;
-	}
-
-	.popup-not-working {
-		background-color: #808080;
-	}
-
-	.popup a {
-		color: #383838;
-		text-decoration: none;
-		background-image: none;
-	}
-
-	.popup a:hover {
-		color: #383838;
-		text-decoration: underline;
-		background-image: none;
-	}
-</style>

@@ -73,30 +73,99 @@ export const MetricEnum = {
 		computeMetric: computeVulnerableCarRatio,
 		decreasing: false,
 		showSpeedLimit: false,
-		metricName: 'zwakke weggebruikers / voertuig'
+		metricName: 'zwakke weggebruikers / voertuig',
+		colormap: [
+			{
+				value: 0.2,
+				color: '#ff0000'
+			},
+			{
+				value: 0.4,
+				color: '#ff5349'
+			},
+			{
+				value: 0.6,
+				color: '#fa500'
+			},
+			{
+				value: 0.8,
+				color: '#ffae42'
+			},
+			{
+				value: 1,
+				color: '#ffff00'
+			},
+			{
+				value: 1.2,
+				color: '#9acd32'
+			}
+		]
 	},
 	RATIO_SPEEDING_VIOLATION: {
 		name: '% chauffeurs binnen snelheidslimiet',
 		computeMetric: computeCorrectSpeedRatio,
 		decreasing: false,
 		showSpeedLimit: true,
-		computeRank: (x) => {
-			// 3 categorieën: >= 85% goede chauffeurs, >= 75% goede chauffeurs, < 75% goede chauffeurs
-			if (x < 75) {
-				return 3;
-			} else if (x < 85) {
-				return 2;
+		metricName: '% van de chauffeurs binnen de snelheidslimiet',
+		colormap: [
+			{
+				value: 0.65,
+				color: '#ff0000'
+			},
+			{
+				value: 0.7,
+				color: '#ff5349'
+			},
+			{
+				value: 0.75,
+				color: '#fa500'
+			},
+			{
+				value: 0.8,
+				color: '#ffae42'
+			},
+			{
+				value: 0.85,
+				color: '#ffff00'
+			},
+			{
+				value: 0.9,
+				color: '#9acd32'
 			}
-			return 1;
-		},
-		metricName: '% van de chauffeurs binnen de snelheidslimiet'
+		]
 	},
 	SPEEDING_VIOLATION_SPEED: {
 		name: 'Gemiddelde snelheid bij snelheidsovertreding',
 		computeMetric: computeSpeedingViolationSpeed,
 		decreasing: true,
 		showSpeedLimit: true,
-		metricName: 'km/u boven snelheidslimiet'
+		metricName: 'km/u boven snelheidslimiet',
+		colormap: [
+			{
+				value: 25,
+				color: '#ff0000'
+			},
+			{
+				value: 20,
+				color: '#ff5349'
+			},
+			{
+				value: 15,
+				color: '#fa500'
+			},
+			{
+				value: 10,
+				color: '#ffae42'
+			},
+			{
+				value: 5,
+				color: '#ffff00'
+			},
+			{
+				value: 0,
+				color: '#9acd32'
+			}
+		]
 	}
 };
 /**

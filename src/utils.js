@@ -165,3 +165,25 @@ export async function chainFetches(urls, delayMs = 0, toJson = true) {
 	}
 	return responses;
 }
+
+/**
+ * @function
+ * @param feature RankingMetric
+ * @param mt MetricProps
+ * @return color hex
+ */
+export function colorFeatureMetric(feature, mt) {
+	const featureValue = feature.properties.metrics?.[mt.name].value;
+	if (featureValue === undefined || featureValue == 0 || isNaN(featureValue)) {
+		return '#808080';
+	}
+	for (let { value, color } of mt.colormap) {
+		if (mt.decreasing && featureValue > value) {
+			return color;
+		} else if (!mt.decreasing && featureValue < value) {
+			return color;
+		}
+	}
+	// outside of boundaries dictated by colormap
+	return mt.colormap[mt.colormap.length - 1].color;
+}
