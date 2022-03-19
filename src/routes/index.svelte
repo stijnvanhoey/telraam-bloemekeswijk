@@ -132,9 +132,12 @@
 		)
 			.then((speeds) => {
 				const timeEndCall = new Date();
-				console.log(`Calls took ${timeEndCall.getTime() - timeStartCall.getTime()} ms`)
+				console.log(`Calls took ${timeEndCall.getTime() - timeStartCall.getTime()} ms`);
 				const updateProperties = speeds.map((speed) => aggregateTrafficSnapshotData(speed.report));
-				console.log(`Unknown segments: `, updateProperties.filter(p => p.name === '').map(p => p.segment_id));
+				console.log(
+					`Unknown segments: `,
+					updateProperties.filter((p) => p.name === '').map((p) => p.segment_id)
+				);
 				const updatedSnapshot = JSON.parse(JSON.stringify(snapshot));
 				updateProperties.forEach((prop, idx) => {
 					if (prop.name !== '') {

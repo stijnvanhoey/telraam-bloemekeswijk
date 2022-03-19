@@ -29,14 +29,16 @@
 			}
 			let legendEntries = [];
 			const legendEntry = (label, color) => ({
-					label,
-					type: "rectangle",
-					color,
-					fillColor: color,
-					weight: 2
-				});
+				label,
+				type: 'rectangle',
+				color,
+				fillColor: color,
+				weight: 2
+			});
 			if (mt.name === MetricEnum.NONE.name) {
-				legendEntries = Object.entries(defaultColors).filter(([k,]) => k !== ErrorSegmentState).map(([k, v]) => (legendEntry(k, v.color)))
+				legendEntries = Object.entries(defaultColors)
+					.filter(([k]) => k !== ErrorSegmentState)
+					.map(([k, v]) => legendEntry(k, v.color));
 			} else if (mt.decreasing) {
 				let prevValue;
 				legendEntries = mt.colormap.map(({ value, color }) => {
@@ -44,7 +46,10 @@
 					if (prevValue === undefined) {
 						returnValue = legendEntry(`waarde > ${value}${mt.metricUnit}`, color);
 					} else {
-						returnValue = legendEntry(`${prevValue}${mt.metricUnit} > waarde > ${value}${mt.metricUnit}`, color);
+						returnValue = legendEntry(
+							`${prevValue}${mt.metricUnit} > waarde > ${value}${mt.metricUnit}`,
+							color
+						);
 					}
 					prevValue = value;
 					return returnValue;
@@ -56,15 +61,18 @@
 					if (prevValue === undefined) {
 						returnValue = legendEntry(`waarde < ${value}${mt.metricUnit}`, color);
 					} else {
-						returnValue = legendEntry(`${prevValue}${mt.metricUnit} < waarde < ${value}${mt.metricUnit}`, color);
+						returnValue = legendEntry(
+							`${prevValue}${mt.metricUnit} < waarde < ${value}${mt.metricUnit}`,
+							color
+						);
 					}
 					prevValue = value;
 					return returnValue;
 				});
 			}
 			legendControl = leaflet.control.Legend({
-				position: "bottomleft",
-				title: "Legende",
+				position: 'bottomleft',
+				title: 'Legende',
 				collapsed: false,
 				symbolWidth: 24,
 				opacity: 1,
