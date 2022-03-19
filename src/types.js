@@ -109,27 +109,27 @@ export const MetricEnum = {
 		metricName: '% van de chauffeurs binnen de snelheidslimiet',
 		colormap: [
 			{
-				value: 0.65,
+				value: 65,
 				color: '#ff0000'
 			},
 			{
-				value: 0.7,
+				value: 70,
 				color: '#ff5349'
 			},
 			{
-				value: 0.75,
+				value: 75,
 				color: '#fa500'
 			},
 			{
-				value: 0.8,
+				value: 80,
 				color: '#ffae42'
 			},
 			{
-				value: 0.85,
+				value: 85,
 				color: '#ffff00'
 			},
 			{
-				value: 0.9,
+				value: 90,
 				color: '#9acd32'
 			}
 		]
@@ -268,6 +268,26 @@ export const segmentProperties = {
 		speed_limit: 50
 	},
 	9000003149: {
+		name: 'Maïsstraat',
+		speed_limit: 30
+	},
+	9000003136: {
+		name: 'Anjelierstraat',
+		speed_limit: 30
+	},
+	9000003246: {
+		name: 'Frans Van Ryhovelaan',
+		speed_limit: 30
+	},
+	9000003275: {
+		name: 'Maïsstraat',
+		speed_limit: 30
+	},
+	9000003278: {
+		name: 'Poperingestraat',
+		speed_limit: 30
+	},
+	9000003281: {
 		name: 'Maïsstraat',
 		speed_limit: 30
 	}

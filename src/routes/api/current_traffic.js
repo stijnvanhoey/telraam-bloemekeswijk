@@ -6,7 +6,7 @@ const limiter = rateLimit({
 });
 
 export async function get(request) {
-	const limit = parseInt(import.meta.env.VITE_API_LIMIT, 10); // number of requests per minute
+	const limit = parseInt(import.meta.env.VITE_API_LIMIT, 10) || 10; // number of requests per minute
 	const currentUsage = await limiter.check(request, limit, 'CACHE_TOKEN');
 	const isRateLimited = currentUsage >= parseInt(limit, 10);
 
