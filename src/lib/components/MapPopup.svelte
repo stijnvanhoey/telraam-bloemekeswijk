@@ -1,9 +1,10 @@
 <script>
 	import { Badge } from 'spaper';
-	import { MetricEnum, SegmentStateEnum } from '../../types';
-	import { colorFeatureMetric } from '../../utils';
+	import { MetricEnum, SegmentStateEnum, ErrorSegmentState } from '../../types';
+	import { colorFeatureMetric, defaultColorMap } from '../../utils';
 
 	export let properties;
+	const defaultColors = defaultColorMap();
 	let previousDateString = properties.dateStart ?? properties.date;
 	let currentDateString = properties.dateEnd ?? properties.date;
 	if (previousDateString === currentDateString) {
@@ -24,20 +25,10 @@
 	const showSpeedLimit = properties.metric.showSpeedLimit;
 	const isNotWorking = isMetric && isNaN(properties.metrics?.[properties.metric.name]?.value);
 	let backgroundColor;
-	if (isNotWorking) {
-		// gray
-		backgroundColor = '#808080';
-	} else if (isMetric) {
+	if (isMetric) {
 		backgroundColor = colorFeatureMetric({ properties }, properties.metric);
-	} else if (properties.state === SegmentStateEnum.INACTIVE) {
-		// red
-		backgroundColor = 'ff0000';
-	} else if (properties.state === SegmentStateEnum.NEW) {
-		// orange
-		backgroundColor = '#ffa500';
 	} else {
-		// green
-		backgroundColor = '#3cb371';
+		backgroundColor = (defaultColors[properties?.state] || defaultColors[ErrorSegmentState]).color;
 	}
 	const style = `background-color=${backgroundColor}`;
 	const isInactive =

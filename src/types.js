@@ -9,6 +9,7 @@ export const SegmentStateEnum = {
 	NEW: 'Recent toegevoegd, nog geen data beschikbaar',
 	INACTIVE: 'Niet actief, geen data beschikbaar'
 };
+export const ErrorSegmentState = 'Onverwacht';
 
 const computeVulnerableCarRatio = (records) => {
 	let bike = 0;
@@ -74,6 +75,7 @@ export const MetricEnum = {
 		decreasing: false,
 		showSpeedLimit: false,
 		metricName: 'zwakke weggebruikers / voertuig',
+		metricUnit: '',
 		colormap: [
 			{
 				value: 0.2,
@@ -107,6 +109,7 @@ export const MetricEnum = {
 		decreasing: false,
 		showSpeedLimit: true,
 		metricName: '% van de chauffeurs binnen de snelheidslimiet',
+		metricUnit: '%',
 		colormap: [
 			{
 				value: 65,
@@ -140,6 +143,7 @@ export const MetricEnum = {
 		decreasing: true,
 		showSpeedLimit: true,
 		metricName: 'km/u boven snelheidslimiet',
+		metricUnit: 'km/u',
 		colormap: [
 			{
 				value: 25,

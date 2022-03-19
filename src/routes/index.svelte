@@ -114,10 +114,12 @@
 	$: switch3 && updateMetric(MetricEnum.SPEEDING_VIOLATION_SPEED, true);
 	$: !switch3 && updateMetric(MetricEnum.SPEEDING_VIOLATION_SPEED, false);
 	export let snapshot = [];
+	let timeStartCall;
 	const timeEnd = new Date();
 	let timeStart = new Date(timeEnd);
 	timeStart.setDate(timeStart.getDate() - 7);
 	onMount(() => {
+		timeStartCall = new Date();
 		const updateProperties = chainFetches(
 			snapshot.map(
 				(segment) =>
@@ -125,9 +127,12 @@
 						segment.properties.segment_id
 					}-${timeStart.toUTCString()}-${timeEnd.toUTCString()}`
 			),
-			1100 // avoid rate-limiting telraam API
+			1100,
+			10
 		)
 			.then((speeds) => {
+				const timeEndCall = new Date();
+				console.log(`Calls took ${timeEndCall.getTime() - timeStartCall.getTime()} ms`)
 				const updateProperties = speeds.map((speed) => aggregateTrafficSnapshotData(speed.report));
 				console.log(`Unknown segments: `, updateProperties.filter(p => p.name === '').map(p => p.segment_id));
 				const updatedSnapshot = JSON.parse(JSON.stringify(snapshot));

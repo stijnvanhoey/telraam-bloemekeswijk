@@ -1,4 +1,4 @@
-import { SegmentStateEnum, segmentProperties, MetricEnum } from './types';
+import { SegmentStateEnum, segmentProperties, MetricEnum, ErrorSegmentState } from './types';
 
 /**
  * @function
@@ -149,19 +149,32 @@ export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 /**
  * @function
  * @param urls Array<string>
- * @param delayMs number ms between calls
+ * @param delayMs number ms between calls (default = 0)
+ * @param chunkSize number of max. call to perform in parallel. If null, all calls are done in parallel (default = 1)
  * @param toJson boolean If true, await json
  * @return Array<any>
  */
-export async function chainFetches(urls, delayMs = 0, toJson = true) {
+export async function chainFetches(urls, delayMs = 0, chunkSize = 1, toJson = true) {
 	let responses = [];
-	for (let url of urls) {
-		if (toJson) {
-			responses.push(await (await fetch(url)).json());
-		} else {
-			responses.push(await (await fetch(url)).text());
+	let i = 0;
+	let chunk = [];
+	while (i < urls.length) {
+		const url = urls[i];
+		chunk.push(fetch(url));
+		if (chunk.length === chunkSize) {
+			const result = await Promise.all(chunk);
+			responses.push(...result);
+			await delay(delayMs);
+			chunk = [];
 		}
-		await delay(delayMs);
+		i += 1;
+	}
+	if (chunk.length > 0) {
+		const result = await Promise.all(chunk);
+		responses.push(...result);
+	}
+	if (toJson) {
+		return Promise.all(responses.map(async (rsp) => await rsp.json()));
 	}
 	return responses;
 }
@@ -186,4 +199,33 @@ export function colorFeatureMetric(feature, mt) {
 	}
 	// outside of boundaries dictated by colormap
 	return mt.colormap[mt.colormap.length - 1].color;
+}
+
+/**
+ * @function
+ * @return Record<string, object>
+ */
+export function defaultColorMap() {
+	return {
+		[SegmentStateEnum.ACTIVE]: {
+			color: '#3cb371',
+			weight: 10,
+			opacity: 0.9
+		},
+		[SegmentStateEnum.NEW]: {
+			color: '#ffa500',
+			weight: 10,
+			opacity: 0.9
+		},
+		[SegmentStateEnum.INACTIVE]: {
+			color: '#ff0000',
+			weight: 10,
+			opacity: 0.9
+		},
+		[ErrorSegmentState]: {
+			color: '#808080',
+			weight: 10,
+			opacity: 0.9
+		}
+	};
 }

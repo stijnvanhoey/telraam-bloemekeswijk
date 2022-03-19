@@ -1,22 +1,19 @@
 <script>
-	import { SegmentStateEnum, MetricEnum } from '../../types';
-	import { colorFeatureMetric } from '../../utils';
+	import { MetricEnum, ErrorSegmentState } from '../../types';
+	import { colorFeatureMetric, defaultColorMap } from '../../utils';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/env';
 	import MapPopup from './MapPopup.svelte';
+	import '../../leaflet.legend.css';
 
 	let leaflet;
 	let map;
 	let geoJSONLayer;
+	let legendControl;
 	export let snapshot;
 	export let metric;
 
-	let streetStyle = {
-		color: '#3cb371',
-		weight: 10,
-		opacity: 0.9
-	};
-
+	const defaultColors = defaultColorMap();
 	function updateMap(sn, mt) {
 		if (leaflet && map) {
 			if (geoJSONLayer) {
@@ -27,6 +24,54 @@
 				style: (ft) => styleFeature(ft, mt)
 			});
 			geoJSONLayer.addTo(map);
+			if (legendControl) {
+				map.removeControl(legendControl);
+			}
+			let legendEntries = [];
+			const legendEntry = (label, color) => ({
+					label,
+					type: "rectangle",
+					color,
+					fillColor: color,
+					weight: 2
+				});
+			if (mt.name === MetricEnum.NONE.name) {
+				legendEntries = Object.entries(defaultColors).filter(([k,]) => k !== ErrorSegmentState).map(([k, v]) => (legendEntry(k, v.color)))
+			} else if (mt.decreasing) {
+				let prevValue;
+				legendEntries = mt.colormap.map(({ value, color }) => {
+					let returnValue;
+					if (prevValue === undefined) {
+						returnValue = legendEntry(`waarde > ${value}${mt.metricUnit}`, color);
+					} else {
+						returnValue = legendEntry(`${prevValue}${mt.metricUnit} > waarde > ${value}${mt.metricUnit}`, color);
+					}
+					prevValue = value;
+					return returnValue;
+				});
+			} else {
+				let prevValue;
+				legendEntries = mt.colormap.map(({ value, color }) => {
+					let returnValue;
+					if (prevValue === undefined) {
+						returnValue = legendEntry(`waarde < ${value}${mt.metricUnit}`, color);
+					} else {
+						returnValue = legendEntry(`${prevValue}${mt.metricUnit} < waarde < ${value}${mt.metricUnit}`, color);
+					}
+					prevValue = value;
+					return returnValue;
+				});
+			}
+			legendControl = leaflet.control.Legend({
+				position: "bottomleft",
+				title: "Legende",
+				collapsed: false,
+				symbolWidth: 24,
+				opacity: 1,
+				column: 1,
+				legends: legendEntries
+			});
+			legendControl.addTo(map);
 		}
 	}
 
@@ -100,42 +145,22 @@
 	}
 
 	function styleFeatureNone(feature) {
-		switch (feature.properties.state) {
-			case SegmentStateEnum.ACTIVE:
-				return streetStyle;
-			case SegmentStateEnum.NEW:
-				return { ...streetStyle, color: '#ffa500' };
-			case SegmentStateEnum.INACTIVE:
-				return { ...streetStyle, color: '#ff0000' };
-			default:
-				// unknown
-				return { ...streetStyle, color: '#3cb371' };
-		}
+		return defaultColors[feature.properties.state] || defaultColors[ErrorSegmentState];
 	}
 
 	function styleFeature(feature, mt) {
 		if (mt.name === MetricEnum.NONE.name) {
 			return styleFeatureNone(feature);
 		}
-		return { ...streetStyle, color: colorFeatureMetric(feature, mt) };
+		return { ...defaultColors[ErrorSegmentState], color: colorFeatureMetric(feature, mt) };
 	}
 
 	onMount(async () => {
 		if (browser) {
 			leaflet = await import('leaflet');
-
+			await import('../../leaflet.legend');
 			map = leaflet.map('map', { minZoom: 13 }).setView([51.069, 3.703], 16);
 
-			leaflet
-				.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
-					attribution:
-						'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-					subdomains: 'abcd',
-					minZoom: 0,
-					maxZoom: 18,
-					ext: 'png'
-				})
-				.addTo(map);
 			leaflet
 				.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lines/{z}/{x}/{y}{r}.{ext}', {
 					attribution:
@@ -146,15 +171,6 @@
 					ext: 'png'
 				})
 				.addTo(map);
-
-			// leaflet.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
-			//     attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-			//     subdomains: 'abcd',
-			//     minZoom: 1,
-			//     maxZoom: 16,
-			//     ext: 'jpg'
-			// }).addTo(map);
-
 			updateMap(snapshot, metric);
 		}
 	});
