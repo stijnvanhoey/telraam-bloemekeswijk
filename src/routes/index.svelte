@@ -128,7 +128,7 @@
 					}-${timeStart.toUTCString()}-${timeEnd.toUTCString()}`
 			),
 			1100,
-			10
+			3
 		)
 			.then((speeds) => {
 				const timeEndCall = new Date();
