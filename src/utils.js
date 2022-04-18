@@ -158,10 +158,13 @@ export async function chainFetches(urls, delayMs = 0, chunkSize = 1, toJson = tr
 	let responses = [];
 	let i = 0;
 	let chunk = [];
+	let iChunk = 0;
 	while (i < urls.length) {
 		const url = urls[i];
 		chunk.push(fetch(url));
 		if (chunk.length === chunkSize) {
+			console.log(`Fetching chunk ${iChunk} / ${Math.ceil(urls.length / chunkSize)}`);
+			iChunk += 1;
 			const result = await Promise.all(chunk);
 			responses.push(...result);
 			await delay(delayMs);
@@ -170,6 +173,7 @@ export async function chainFetches(urls, delayMs = 0, chunkSize = 1, toJson = tr
 		i += 1;
 	}
 	if (chunk.length > 0) {
+		console.log(`Fetching chunk ${iChunk} / ${Math.ceil(urls.length / chunkSize)}`);
 		const result = await Promise.all(chunk);
 		responses.push(...result);
 	}
