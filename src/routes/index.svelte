@@ -5,7 +5,8 @@
 		getSegmentState,
 		aggregateTrafficSnapshotData,
 		sortMetric,
-		chainFetches
+		chainFetches,
+		delay
 	} from '../utils';
 	export async function load({ fetch }) {
 		const res = await fetch('/api/current_traffic');
