@@ -14,14 +14,8 @@ const config = {
 	],
 	extensions: ['.svelte', '.md'],
 	kit: {
-		// hydrate the <div id="svelte"> element in src/app.html
-		target: '#svelte',
 		adapter: vercel(),
-		vite: {
-			optimizeDeps: {
-				include: ['lodash.omit', 'lodash.pick']
-			}
-		}
+		vite: {}
 	}
 };
 
