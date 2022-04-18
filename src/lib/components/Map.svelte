@@ -166,7 +166,7 @@
 	onMount(async () => {
 		if (browser) {
 			leaflet = await import('leaflet');
-			await import('../../leaflet.legend');
+			await import('$lib/leaflet.legend');
 			map = leaflet.map('map', { minZoom: 13 }).setView([51.069, 3.703], 16);
 
 			leaflet
