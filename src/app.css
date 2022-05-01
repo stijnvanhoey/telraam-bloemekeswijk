@@ -33,3 +33,7 @@ a {
 	max-height: 250px;
 	object-fit: cover;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
