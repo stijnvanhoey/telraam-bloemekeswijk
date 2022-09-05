@@ -1,8 +1,7 @@
 <script context="module">
-	export async function load({ page, fetch }) {
-		const slug = page.path.split('/').slice(-1)[0]; // last part of url path
-		const url = `/${slug}.json`;
-		const res = await fetch(url);
+	export async function load({ url, fetch }) {
+		const urn = `${url.pathname}.json`;
+		const res = await fetch(urn);
 		if (res.ok) {
 			return {
 				props: {
