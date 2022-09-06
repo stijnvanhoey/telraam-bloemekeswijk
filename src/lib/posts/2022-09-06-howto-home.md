@@ -3,8 +3,8 @@ slug: 2022-09-06-tutorial-telraam-homepage
 title: Hoe werkt telraam, de startpagina?
 date: 2022-09-06
 author: davy
-banner:
-excerpt: ''
+banner: tutorial_start_banner.png
+excerpt: 'Op de pagina van telraamkan je nog heel wat meer informatie vinden.'
 tags: ['meten']
 ---
 
@@ -12,9 +12,7 @@ tags: ['meten']
   import Image from "$lib/components/Image.svelte";
 </script>
 
-Op de startpagina van de telraamwebsite kan je heel wat informatie vinden. Surf naar https://www.telraam.net/#14/51.0727/3.6939 en je ziet de telraamkaart ingezoomd op de Bloemekenswijk.
-
-Rechts onderin je scherm zie je een aantal gegevens
+Op de startpagina van de telraamwebsite kan je heel wat informatie vinden. Surf naar [https://www.telraam.net/#14/51.0727/3.6939](https://www.telraam.net/#14/51.0727/3.6939) en je ziet de telraamkaart ingezoomd op de Bloemekenswijk.
 
 <Image
   filename="tutorial_start_1.png"
@@ -23,18 +21,20 @@ Rechts onderin je scherm zie je een aantal gegevens
   width="200px"
 />
 
+Rechts onderin je scherm zie je een aantal gegevens
+
 Standaard staat dit ingesteld op het aantal passages per uur. Hier worden voetgangers, fietsers, auto’s en vrachtwagens geteld. Je zal zien dat de straten waar een telraam staat een kleurtje hebben. Gele straten hadden minder dan 50 passages per uur, oranje tussen 50 en 100, enz… Je ziet dus in één oogopslag hoe druk het in de verschillende straten is. De paarse straten krijgen heel wat verkeer te slikken, in de gele is het kalmpjes. Dit zegt echter nog niks over het aantal auto’s, of de gemiddelde snelheid.
 
-Je kan de data die je ziet aanpassen door op onderstaand vakje te klikken.
+Je kan de data die je ziet aanpassen door op onderstaand vakje te klikken:
 
 <Image
   filename="tutorial_start_2.png"
   alt="Weergave drop down menu met optie Alle gekozen"
-  floatClass=""
   width="200px"
+  floatClass=""
 />
 
-Dan opent er een nieuw menu
+Dan opent er een nieuw menu:
 
 <Image
   filename="tutorial_start_3.png"
