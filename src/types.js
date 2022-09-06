@@ -306,5 +306,13 @@ export const segmentProperties = {
 	9000003502: {
 		name: 'Jasmijnstraat',
 		speed_limit: 30
+	},
+	9000003444: {
+		name: 'Francisco Ferrerlaan',
+		speed_limit: 50
+	},
+	9000003893: {
+		name: 'Veronicastraat',
+		speed_limit: 30
 	}
 };
