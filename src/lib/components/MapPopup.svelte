@@ -7,16 +7,20 @@
 	const defaultColors = defaultColorMap();
 	let previousDateString = properties.dateStart ?? properties.date;
 	let currentDateString = properties.dateEnd ?? properties.date;
+	console.log(previousDateString, currentDateString)
 	if (previousDateString === currentDateString) {
 		try {
 			const currentTime = new Date(Date.parse(currentDateString)).getTime();
-			previousDateString = new Date().setTime(currentTime - 1000 * 60 * 60).toISOString();
+			let previousDate_ = new Date()
+			previousDate_.setTime(currentTime - 1000 * 60 * 60)
+			previousDateString = previousDate_.toISOString()
 		} catch {
 			// In case of inactive sensors
 		}
 	}
 
 	let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+	console.log(previousDateString, currentDateString)
 	const currentDateStr = new Date(Date.parse(currentDateString)).toLocaleString('nl-BE', options);
 	const currentHourNum = new Date(Date.parse(currentDateString)).getHours();
 	const previousDateStr = new Date(Date.parse(previousDateString)).toLocaleString('nl-BE', options);

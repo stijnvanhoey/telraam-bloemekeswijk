@@ -167,7 +167,7 @@
 		if (browser) {
 			leaflet = await import('leaflet');
 			await import('$lib/leaflet.legend');
-			map = leaflet.map('map', { minZoom: 13 }).setView([51.069, 3.703], 16);
+			map = leaflet.map('map', { minZoom: 13 }).setView([51.0714, 3.7107], 16);
 
 			leaflet
 				.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lines/{z}/{x}/{y}{r}.{ext}', {
