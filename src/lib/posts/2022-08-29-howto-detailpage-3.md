@@ -1,7 +1,7 @@
 ---
-slug: 2022-09-09-tutorial-telraam-detailpage-3
+slug: 2022-08-29-tutorial-telraam-detailpage-3
 title: Hoe werkt telraam, de detailpagina van je straat (deel 3)?
-date: 2022-09-09
+date: 2022-08-29
 author: davy
 banner: tutorial_detail_3_9.png
 excerpt: 'In deze post leggen we uit welke gegevens en grafieken je ziet en hoe je deze moet interpreteren'

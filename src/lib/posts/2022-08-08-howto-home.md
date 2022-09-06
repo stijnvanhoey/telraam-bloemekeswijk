@@ -1,7 +1,7 @@
 ---
-slug: 2022-09-06-tutorial-telraam-homepage
+slug: 2022-08-08-tutorial-telraam-homepage
 title: Hoe werkt telraam, de startpagina?
-date: 2022-09-06
+date: 2022-08-08
 author: davy
 banner: tutorial_start_banner.png
 excerpt: 'Op de pagina van telraamkan je nog heel wat meer informatie vinden.'

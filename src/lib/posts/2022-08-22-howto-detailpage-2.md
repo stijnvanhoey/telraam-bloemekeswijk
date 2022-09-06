@@ -1,7 +1,7 @@
 ---
-slug: 2022-09-08-tutorial-telraam-detailpage-2
+slug: 2022-08-22-tutorial-telraam-detailpage-2
 title: Hoe werkt telraam, de detailpagina van je straat  (deel 2)?
-date: 2022-09-08
+date: 2022-08-22
 author: davy
 banner: tutorial_detail_2_3.png
 excerpt: 'De bewoner van het huis waar het telraam hangt, heeft bij installatie een aantal gegevens ingevoerd over de straat waar die woont. Je vindt dit allemaal op deze pagina.'
