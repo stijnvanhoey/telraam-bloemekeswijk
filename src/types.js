@@ -288,7 +288,7 @@ export const segmentProperties = {
 		speed_limit: 30
 	},
 	9000003278: {
-		name: 'Poperingestraat',
+		name: 'Magnoliastraat',
 		speed_limit: 30
 	},
 	9000003281: {
